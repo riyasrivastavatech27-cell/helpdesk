@@ -1,7 +1,12 @@
 package com.first.helpdesk.controller;
+import com.first.helpdesk.dto.UserRequestDTO;
+import com.first.helpdesk.dto.UserResponseDTO;
 import com.first.helpdesk.service.UserService;
 import org.springframework.web.bind.annotation.*;
 import com.first.helpdesk.entity.User;
+import com.first.helpdesk.dto.LogicRequestDTO;
+
+import java.util.ArrayList;
 import java.util.List;
 @RestController
 @RequestMapping("/users")
@@ -13,16 +18,28 @@ public class UserController {
     }
     @PostMapping //postman ke request me jo JSON  hai use java object me convert krke do
     //USE REQ when we are sending in JSON
-    public User createUser(@RequestBody User user){
-        return userService.createUser(user);
+    public UserResponseDTO createUser(@RequestBody UserRequestDTO userRequestDTO){
+        User user=new User();
+        user.setName(userRequestDTO.getName());
+        user.setRole(userRequestDTO.getRole());
+        user.setEmail( userRequestDTO.getEmail());
+        user.setPassword(userRequestDTO.getPassword());
+        User savedUser= userService.createUser(user);
+        return convertToResponseDTO(savedUser);
     }
     @GetMapping
-    public List<User> getAllUsers(){
-        return userService.getAllUsers();
+    public List<UserResponseDTO> getAllUsers(){
+        List<User> users= userService.getAllUsers();
+        List<UserResponseDTO> responseDTOS= new ArrayList<>();
+        for(User user: users){
+            responseDTOS.add(convertToResponseDTO(user));
+        }
+        return responseDTOS;
     }
     @GetMapping("/{id}")//jab url se value leni ho
-    public  User getUserById(@PathVariable int id){
-        return userService.getUserById(id);
+    public  UserResponseDTO getUserById(@PathVariable int id){
+        User user = userService.getUserById(id);
+        return convertToResponseDTO(user);
     }
     @PutMapping //jab update krna ho
     public User updateUser(@PathVariable int id,@RequestBody User updatedUser){
@@ -31,5 +48,18 @@ public class UserController {
 @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable int id){
         userService.deleteUser(id);
+}
+@PostMapping("/login")
+public boolean login(@RequestBody LogicRequestDTO logicRequestDTO){
+        return userService.login(logicRequestDTO);
+}
+
+UserResponseDTO convertToResponseDTO(User user){
+UserResponseDTO responseDTO = new UserResponseDTO();
+responseDTO.setEmail(user.getEmail());
+responseDTO.setName(user.getName());
+responseDTO.setId(user.getId());
+user.setRole(user.getRole());
+return responseDTO;
 }
 }
