@@ -1,9 +1,9 @@
 package com.first.helpdesk.dto;
 
-public class LogicRequestDTO {
+public class LoginRequestDTO {
     private String email;
     private String password;
-    public LogicRequestDTO(){}
+    public LoginRequestDTO(){}
 
     public String getEmail() {
         return email;

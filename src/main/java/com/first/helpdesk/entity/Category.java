@@ -8,7 +8,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    @OneToMany
+    @OneToMany(mappedBy = "category")
     private List<Ticket> tickets;
     public Category(){}
 

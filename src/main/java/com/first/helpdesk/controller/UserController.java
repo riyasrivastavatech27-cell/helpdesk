@@ -2,19 +2,23 @@ package com.first.helpdesk.controller;
 import com.first.helpdesk.dto.UserRequestDTO;
 import com.first.helpdesk.dto.UserResponseDTO;
 import com.first.helpdesk.service.UserService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.web.bind.annotation.*;
 import com.first.helpdesk.entity.User;
-import com.first.helpdesk.dto.LogicRequestDTO;
+import com.first.helpdesk.dto.LoginRequestDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
+    private final AuthenticationManager authenticationManager;
     private final  UserService userService;
-    public UserController(UserService userService){
+    public UserController(UserService userService,AuthenticationManager authenticationManager){
         this.userService=userService;
+        this.authenticationManager=authenticationManager;
     }
     @PostMapping //postman ke request me jo JSON  hai use java object me convert krke do
     //USE REQ when we are sending in JSON
@@ -41,7 +45,7 @@ public class UserController {
         User user = userService.getUserById(id);
         return convertToResponseDTO(user);
     }
-    @PutMapping //jab update krna ho
+    @PutMapping("/{id}") //jab update krna ho
     public User updateUser(@PathVariable int id,@RequestBody User updatedUser){
         return userService.updateUser(id,updatedUser);
     }
@@ -50,8 +54,9 @@ public class UserController {
         userService.deleteUser(id);
 }
 @PostMapping("/login")
-public boolean login(@RequestBody LogicRequestDTO logicRequestDTO){
-        return userService.login(logicRequestDTO);
+public boolean login(@RequestBody LoginRequestDTO loginRequestDTO){
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(),loginRequestDTO.getPassword()));
+        return true;
 }
 
 UserResponseDTO convertToResponseDTO(User user){
@@ -59,7 +64,7 @@ UserResponseDTO responseDTO = new UserResponseDTO();
 responseDTO.setEmail(user.getEmail());
 responseDTO.setName(user.getName());
 responseDTO.setId(user.getId());
-user.setRole(user.getRole());
+responseDTO.setRole(user.getRole());
 return responseDTO;
 }
 }

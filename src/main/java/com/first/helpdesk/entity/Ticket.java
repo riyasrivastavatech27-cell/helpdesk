@@ -1,38 +1,53 @@
 package com.first.helpdesk.entity;
+
 import jakarta.persistence.*;
 
 @Entity
-public class Ticket{
+public class Ticket {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String title;
+
     private String description;
+
     @ManyToOne
-    @JoinColumn(name="customer_id")//ci is foreign key to connect ticket and user
-    private Category category;
+    @JoinColumn(name = "customer_id")
     private User customer;
+
     @ManyToOne
-    @JoinColumn(name="agent_id")
+    @JoinColumn(name = "agent_id")
     private User agent;
-    public enum TicketStatus{
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    public enum TicketStatus {
         OPEN,
         ASSIGNED,
         IN_PROGRESS,
         RESOLVED,
         CLOSED
     }
-    public enum Priority{
+
+    public enum Priority {
         LOW,
         MEDIUM,
         HIGH
     }
+
+    @Enumerated(EnumType.STRING)
     private TicketStatus ticketStatus;
+
+    @Enumerated(EnumType.STRING)
     private Priority priority;
 
-    public Ticket(){
-
+    public Ticket() {
     }
+
     public TicketStatus getTicketStatus() {
         return ticketStatus;
     }
@@ -72,18 +87,22 @@ public class Ticket{
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
-public User getCustomer(){
+
+    public User getCustomer() {
         return customer;
-}
-public void setCustomer(User customer){
-        this.customer=customer;
-}
-public User getAgent(){
+    }
+
+    public void setCustomer(User customer) {
+        this.customer = customer;
+    }
+
+    public User getAgent() {
         return agent;
-}
-public void setAgent(User agent){
-        this.agent=agent;
-}
+    }
+
+    public void setAgent(User agent) {
+        this.agent = agent;
+    }
 
     public Category getCategory() {
         return category;

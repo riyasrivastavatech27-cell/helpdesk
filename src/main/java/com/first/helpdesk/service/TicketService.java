@@ -19,14 +19,15 @@ public class TicketService {
         return ticketRepository.findAll();
     }
     public Ticket updateTicket(int id,Ticket updatedTicket){
-        Ticket ticket = new Ticket();
+
+        Ticket ticket = ticketRepository.findById(id).orElseThrow(()-> new RuntimeException("Ticket not found"));
         ticket.setTicketStatus(updatedTicket.getTicketStatus());
         ticket.setTitle(updatedTicket.getTitle());
         ticket.setAgent(updatedTicket.getAgent());
         ticket.setCustomer(updatedTicket.getCustomer());
         ticket.setPriority(updatedTicket.getPriority());
         ticket.setCategory(updatedTicket.getCategory());
-        return ticket;
+        return ticketRepository.save(ticket);
     }
     public void deleteTicket(int id){
         ticketRepository.deleteById(id);
