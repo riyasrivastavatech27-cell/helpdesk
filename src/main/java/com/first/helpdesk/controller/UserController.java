@@ -1,6 +1,7 @@
 package com.first.helpdesk.controller;
 import com.first.helpdesk.dto.UserRequestDTO;
 import com.first.helpdesk.dto.UserResponseDTO;
+import com.first.helpdesk.service.JwtService;
 import com.first.helpdesk.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,9 +17,11 @@ import java.util.List;
 public class UserController {
     private final AuthenticationManager authenticationManager;
     private final  UserService userService;
-    public UserController(UserService userService,AuthenticationManager authenticationManager){
+    private final JwtService jwtService;
+    public UserController(UserService userService,AuthenticationManager authenticationManager,JwtService jwtService){
         this.userService=userService;
         this.authenticationManager=authenticationManager;
+        this.jwtService=jwtService;
     }
     @PostMapping //postman ke request me jo JSON  hai use java object me convert krke do
     //USE REQ when we are sending in JSON
@@ -53,11 +56,18 @@ public class UserController {
     public void deleteUser(@PathVariable int id){
         userService.deleteUser(id);
 }
-@PostMapping("/login")
-public boolean login(@RequestBody LoginRequestDTO loginRequestDTO){
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(),loginRequestDTO.getPassword()));
-        return true;
-}
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequestDTO loginRequestDTO) {
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequestDTO.getEmail(),
+                        loginRequestDTO.getPassword()
+                )
+        );
+
+        return jwtService.generateToken(loginRequestDTO.getEmail());
+    }
 
 UserResponseDTO convertToResponseDTO(User user){
 UserResponseDTO responseDTO = new UserResponseDTO();
