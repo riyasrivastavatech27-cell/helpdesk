@@ -3,6 +3,8 @@ import com.first.helpdesk.repository.TicketRepository;
 import org.springframework.stereotype.Service;
 import com.first.helpdesk.entity.Ticket;
 import java.util.List;
+import java.util.NoSuchElementException;
+
 @Service
 public class TicketService {
     private final TicketRepository ticketRepository;
@@ -26,7 +28,7 @@ public class TicketService {
     }
     public Ticket updateTicket(int id,Ticket updatedTicket){
 
-        Ticket ticket = ticketRepository.findById(id).orElseThrow(()-> new RuntimeException("Ticket not found"));
+        Ticket ticket = ticketRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Ticket not found"));
         ticket.setTicketStatus(updatedTicket.getTicketStatus());
         ticket.setTitle(updatedTicket.getTitle());
         ticket.setDescription(updatedTicket.getDescription());

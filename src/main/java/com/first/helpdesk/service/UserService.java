@@ -5,6 +5,8 @@ import com.first.helpdesk.repository.UserRepository;
 import com.first.helpdesk.entity.User;
 import com.first.helpdesk.dto.LoginRequestDTO;
 import java.util.List;
+import java.util.NoSuchElementException;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -26,7 +28,7 @@ public class UserService {
         return userRepository.findAll();
     }
     public User updateUser(int id,User updatedUser){
-        User user= userRepository.findById(id).orElseThrow(()->new RuntimeException("User not found with id "+ id));
+        User user= userRepository.findById(id).orElseThrow(()->new NoSuchElementException("User not found with id "+ id));
         user.setEmail(updatedUser.getEmail());
         user.setName(updatedUser.getName());
         user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
