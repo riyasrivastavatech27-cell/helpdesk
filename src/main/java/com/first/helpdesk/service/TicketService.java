@@ -10,6 +10,12 @@ public class TicketService {
         this.ticketRepository=ticketRepository;
     }
     public Ticket createTicket(Ticket ticket){
+        if(ticket.getTicketStatus()==null){
+            ticket.setTicketStatus(Ticket.TicketStatus.OPEN);
+        }
+        if(ticket.getPriority() == null) {
+            ticket.setPriority(Ticket.Priority.MEDIUM);
+        }
         return ticketRepository.save(ticket);
     }
     public Ticket getTicketById(int id){
@@ -23,6 +29,7 @@ public class TicketService {
         Ticket ticket = ticketRepository.findById(id).orElseThrow(()-> new RuntimeException("Ticket not found"));
         ticket.setTicketStatus(updatedTicket.getTicketStatus());
         ticket.setTitle(updatedTicket.getTitle());
+        ticket.setDescription(updatedTicket.getDescription());
         ticket.setAgent(updatedTicket.getAgent());
         ticket.setCustomer(updatedTicket.getCustomer());
         ticket.setPriority(updatedTicket.getPriority());

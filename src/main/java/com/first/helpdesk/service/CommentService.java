@@ -3,6 +3,7 @@ import java.util.List;
 import com.first.helpdesk.repository.CommentRepository;
 import com.first.helpdesk.entity.Comment;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 
 @Service
 public class CommentService {
@@ -11,6 +12,9 @@ public class CommentService {
         this.commentRepository=commentRepository;
     }
     public Comment createComment(Comment comment){
+        if(comment.getCreatedAt() == null){
+            comment.setCreatedAt(LocalDateTime.now());
+        }
         return commentRepository.save(comment);
     }
     public List<Comment> getAllComments(){

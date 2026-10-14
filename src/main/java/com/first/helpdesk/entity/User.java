@@ -1,17 +1,21 @@
 package com.first.helpdesk.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-@Entity //database entity
+@Entity
 public class User {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//db automatically generate the ID
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String name;
     private String email;
+    @JsonIgnore
     private String password;
 
     public enum Role {
@@ -20,11 +24,9 @@ public class User {
         ADMIN
     }
 
-    private Role role;//role variable only contain a Role value
+    private Role role;
 
-    //user.setRole(Role.CUSTOMER);
     public User() {
-
     }
 
     public String getName() {
@@ -66,4 +68,5 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
+
 }

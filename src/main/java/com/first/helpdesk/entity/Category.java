@@ -1,5 +1,7 @@
 package com.first.helpdesk.entity;
 import java.util.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,6 +10,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private List<Ticket> tickets;
     public Category(){}

@@ -28,7 +28,7 @@ public class UserController {
     public UserResponseDTO createUser(@RequestBody UserRequestDTO userRequestDTO){
         User user=new User();
         user.setName(userRequestDTO.getName());
-        user.setRole(userRequestDTO.getRole());
+        user.setRole(User.Role.CUSTOMER);
         user.setEmail( userRequestDTO.getEmail());
         user.setPassword(userRequestDTO.getPassword());
         User savedUser= userService.createUser(user);
